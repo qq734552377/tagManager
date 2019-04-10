@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/scan"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:text="@string/scan_code"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/write_rfid"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:text="@string/write_rfid"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/red_nafc_tag"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:text="@string/read_rfid"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/change_to_sleep"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:text="@string/change_sleep_mode"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/change_to_work"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:text="@string/change_work_mode"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/check_rfid"
+            style="@style/FullScrennButton"
+            android:layout_marginTop="16dp"
+            android:text="@string/check"
+            android:visibility="gone"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/scan_code"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text=""
+            />
+        <TextView
+            android:id="@+id/rfid"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text=""
+            android:textColor="@color/colorAccent"
+            />
+        <TextView
+            android:id="@+id/match_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_2"
+            android:textSize="22sp"
+            android:text=""
+            android:textStyle="bold"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/msg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textSize="28sp"
+            android:textColor="@color/share_text"
+            />
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

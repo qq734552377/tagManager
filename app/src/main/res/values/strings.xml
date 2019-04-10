@@ -1,0 +1,229 @@
+<resources>
+
+    <string name="welcome">欢迎使用</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="consumer_name">客户名:</string>
+    <string name="consumer_name1">客户名</string>
+    <string name="product_model">产品型号:</string>
+    <string name="product_model1">产品型号</string>
+    <string name="product_id">产品ID:</string>
+    <string name="product_id1">产品ID</string>
+    <string name="input_type">输入方式:</string>
+    <string name="woke_order_type">工单类型:</string>
+    <string name="woke_order_type1">工单类型</string>
+    <string name="counts">数量:</string>
+    <string name="counts_hint">请输入产品数量</string>
+    <string name="id_header">常见编号头:</string>
+    <string name="last_four_number">后四位:</string>
+    <string name="last_four_number_hint">请输入编号后,用空格隔开</string>
+    <string name="troubles">问题现象:</string>
+    <string name="troubles1">问题现象</string>
+    <string name="handle_ways">处理方式:</string>
+    <string name="handle_ways1">处理方式</string>
+    <string name="handle_msgs">处理信息:</string>
+    <string name="handle_msgs1">处理信息</string>
+    <string name="handle_msgs_hint">请简要说明处理内容</string>
+    <string name="serviceman">维修人员:</string>
+    <string name="date">日期时间:</string>
+    <string name="service_date">维修时间:</string>
+    <string name="from">从</string>
+    <string name="to">到</string>
+    <string name="querry">查询</string>
+    <string name="no_more_data">暂无数据</string>
+    <string name="cancle">取消</string>
+    <string name="success">完成</string>
+    <string name="queding">确定</string>
+    <string name="username">用户</string>
+    <string name="submit">提交</string>
+    <string name="password">密码</string>
+    <string name="login">登   录</string>
+    <string name="search">搜索</string>
+    <string name="alter">修改</string>
+    <string name="tishi">提示</string>
+    <string name="kaishi">开始日期不能超过结束日期</string>
+    <string name="jieshu">结束日期不能小于开始日期</string>
+    <string name="dangqian">结束日期不能超过当前日期</string>
+    <string name="update">版本更新</string>
+    <string name="version">版本信息</string>
+    <string name="exit">退出当前账号</string>
+    <string name="banbengming">当前版本号：</string>
+    <string name="hi">你好，</string>
+    <string name="gongdanshu">今日新增工单数：</string>
+
+    <string name="WorkOrderActivity">工单填写</string>
+    <string name="QuerryActivity">查询</string>
+    <string name="WorkOrderDetialActivity">详情</string>
+    <string name="MySettingActivity">设置</string>
+    <string name="AlertActivity">修改工单</string>
+    <string name="requesterror">请求错误，请检查下账户名、密码和网络重新尝试一下，谢谢！</string>
+    <string name="select">请选择</string>
+    <string name="all">全部</string>
+    <string name="error_insert">请把工单信息填写完整，谢谢！</string>
+    <string name="error_update">修改时发生异常，请重新尝试一下！</string>
+    <string name="error_insert_upload">添加数据失败！</string>
+    <string name="querrying">正在查询...</string>
+    <string name="updating">正在修改...</string>
+    <string name="adding">正在添加...</string>
+    <string name="isue_exit">确定要退出当前账号吗？</string>
+    <string name="is_download_new_apk">发现新版本,是否马上下载？</string>
+    <string name="is_update_new_version">有新的版本,是否马上更新？</string>
+    <string name="the_new_version">已经是最新版本了，当前版本为：</string>
+    <string name="downloading">亲，努力下载中...</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="username_morethan_six">用户名必须大于6位！</string>
+    <string name="password_morethan_six">密码必须大于6位！</string>
+    <string name="input_product_id">请输入产品ID</string>
+    <string name="today">今天</string>
+    <string name="less_week">近一周</string>
+    <string name="less_month">近一个月</string>
+    <string name="other">其他</string>
+    <string name="get_more_data">点击加载更多</string>
+    <string name="no_data_modify">没有修改任何内容</string>
+
+
+    <!-- 新增加班的string-->
+    <string name="ExtraWorkActivity">加班</string>
+    <string name="is_extra_work">是否加班中：</string>
+    <string name="is_extra_work_add">是否加班时添加：</string>
+    <string name="no">否</string>
+    <string name="yes">是</string>
+    <string name="work_iamge">现场图片：</string>
+    <string name="work_reson">加班原因：</string>
+    <string name="work_reson_hint">请简要说明加班原因</string>
+    <string name="overtime_sign_in">加班签到</string>
+    <string name="overtime_sign_out">加班签退</string>
+    <string name="check_reson_promot">加班原因不可为空</string>
+    <string name="check_image_promot">必须包含当前照片</string>
+    <string name="ExtraWorkDetailActivity">本月加班情况</string>
+    <string name="clear_cache">清除缓存图片</string>
+    <string name="no_cache">没有缓存图片了</string>
+    <string name="is_sure_clear_cache">确定要清除所有的图片吗？</string>
+    <string name="clear_cache_size">共释放存储空间：</string>
+    <string name="clear_cache_falut">未知原因释放失败！</string>
+    <string name="overtime_sign_in_ing">正在签到...</string>
+    <string name="overtime_sign_out_ing">正在签退...</string>
+    <string name="overtime_sign_in_sucess">签到成功,记得签退哦!</string>
+    <string name="overtime_sign_out_sucess">签退成功!</string>
+
+    <string name="INOutStockActivity">出入库</string>
+    <string name="upload">上传</string>
+    <string name="uploading">正在上传...</string>
+
+    <!-- 新增字段-->
+    <string name="app_name">TagManager</string>
+    <string name="scan_code">扫描条形码</string>
+    <string name="read_rfid">读取NFC ID</string>
+    <string name="write_rfid">写入NFC ID</string>
+    <string name="change_sleep_mode">转换为睡眠模式</string>
+    <string name="change_work_mode">转换为工作模式</string>
+    <string name="check_and_write_rfid">工厂烧录RFID</string>
+    <string name="check">检查设备ID</string>
+    <string name="scan_code_and_rfid_same">条形码与RFID一致</string>
+    <string name="scan_code_and_rfid_unsame">条形码与RFID不一致</string>
+    <string name="barcode">条形码</string>
+    <string name="rfid">RFID</string>
+
+    <!-- 新增字段-->
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value"/>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+
+
+
+
+
+
+
+
+
+</resources>

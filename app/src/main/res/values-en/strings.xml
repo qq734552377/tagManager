@@ -1,0 +1,221 @@
+<resources>
+
+    <string name="welcome">Welcome to use!</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="consumer_name">Customer Name:</string>
+    <string name="consumer_name1">Customer Name</string>
+    <string name="product_model">Product Model:</string>
+    <string name="product_model1">Product Model</string>
+    <string name="product_id">Product ID:</string>
+    <string name="product_id1">Product ID</string>
+    <string name="input_type">Input Mode:</string>
+    <string name="woke_order_type">Work Order Type:</string>
+    <string name="woke_order_type1">Work Order Type</string>
+    <string name="counts">Count:</string>
+    <string name="counts_hint">Please enter the number of products</string>
+    <string name="id_header">Common Numbered Head:</string>
+    <string name="last_four_number">After Four:</string>
+    <string name="last_four_number_hint">Please enter the number and space off</string>
+    <string name="troubles">Problem:</string>
+    <string name="troubles1">Problem</string>
+    <string name="handle_ways">Handle Model:</string>
+    <string name="handle_ways1">Handle Model</string>
+    <string name="handle_msgs">Handle Message:</string>
+    <string name="handle_msgs1">Handle Message</string>
+    <string name="handle_msgs_hint">Please briefly explain the content</string>
+    <string name="serviceman">Accendant:</string>
+    <string name="date">Date:</string>
+    <string name="service_date">Maintenance Time:</string>
+    <string name="from">FROM</string>
+    <string name="to">TO</string>
+    <string name="querry">Query</string>
+    <string name="no_more_data">No Data</string>
+    <string name="cancle">Cancel</string>
+    <string name="success">Complete</string>
+    <string name="queding">Confirm</string>
+    <string name="username">User</string>
+    <string name="submit">Submit</string>
+    <string name="password">Password</string>
+    <string name="login">Log in</string>
+    <string name="search">Aearch</string>
+    <string name="alter">Modify</string>
+    <string name="tishi">Prompt</string>
+    <string name="kaishi">Start date cannot exceed the end date</string>
+    <string name="jieshu">The end date cannot be less than the start date</string>
+    <string name="dangqian">The end date cannot exceed the current date</string>
+    <string name="update">Version Updating</string>
+    <string name="version">Version Information</string>
+    <string name="exit">Exit Current Account</string>
+    <string name="banbengming">Current Version:</string>
+    <string name="hi">Hello,</string>
+    <string name="gongdanshu">The number of orders added today:</string>
+
+    <string name="WorkOrderActivity">Fill In The Work Order</string>
+    <string name="QuerryActivity">Query</string>
+    <string name="WorkOrderDetialActivity">Details</string>
+    <string name="MySettingActivity">Settings</string>
+    <string name="AlertActivity">Modify The Work Order</string>
+    <string name="requesterror">Request error, please check the account name, password and network to try again, Thanks!</string>
+    <string name="select">Please Select</string>
+    <string name="all">All</string>
+    <string name="error_insert">Please complete the work sheet information. Thank you!</string>
+    <string name="error_update">The exception occurred when the modification occurred, please try again!</string>
+    <string name="error_insert_upload">Add data failed!</string>
+    <string name="querrying">Quering...</string>
+    <string name="updating">Modifying...</string>
+    <string name="adding">Adding...</string>
+    <string name="isue_exit">Sure you want to exit the current account?</string>
+    <string name="is_download_new_apk">Found the new version, whether to download?</string>
+    <string name="is_update_new_version">There is a new version, update immediately?</string>
+    <string name="the_new_version">Is the latest version, the current version is:</string>
+    <string name="downloading"> Try to download...</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="username_morethan_six">User name must be more than 6!</string>
+    <string name="password_morethan_six">Password must be more than 6!</string>
+    <string name="input_product_id">Please input product ID</string>
+    <string name="today">Today</string>
+    <string name="less_week">Nearly A Week</string>
+    <string name="less_month">Nearly A Month</string>
+    <string name="other">Other</string>
+    <string name="get_more_data">Click to load more</string>
+    <string name="no_data_modify">Didn\'t change any content</string>
+
+    <!-- 新增加班的string-->
+    <string name="ExtraWorkActivity">Overtime</string>
+    <string name="is_extra_work">Is in overtime:</string>
+    <string name="is_extra_work_add">Add in overtime:</string>
+    <string name="no">no</string>
+    <string name="yes">yes</string>
+    <string name="work_iamge">Picture:</string>
+    <string name="work_reson"> OT reason:</string>
+    <string name="work_reson_hint">Please briefly state the reason for the overtime</string>
+    <string name="overtime_sign_in">Work overtime check in</string>
+    <string name="overtime_sign_out">Work overtime check out</string>
+    <string name="check_reson_promot">Work overtime reason cannot be empty</string>
+    <string name="check_image_promot">Must contain the current photo</string>
+    <string name="ExtraWorkDetailActivity">This Month To OT Situation</string>
+    <string name="clear_cache">Clear The Cache Images</string>
+    <string name="no_cache">No cache images</string>
+    <string name="is_sure_clear_cache">Sure you want to remove all of the pictures?</string>
+    <string name="clear_cache_size">Release of storage space:</string>
+    <string name="clear_cache_falut">Unknown causes release of failure!</string>
+    <string name="overtime_sign_in_ing">Check in...</string>
+    <string name="overtime_sign_out_ing">Check out...</string>
+    <string name="overtime_sign_in_sucess">Check in success, remember to Check out!</string>
+    <string name="overtime_sign_out_sucess">Check out success!</string>
+
+    <string name="INOutStockActivity">Storage Management</string>
+    <string name="upload">Upload</string>
+    <string name="uploading">uploading...</string>
+
+
+    <!-- 新增字段-->
+    <string name="app_name">TagManager</string>
+    <string name="scan_code">扫描二维码</string>
+    <string name="read_rfid">读取NFC ID</string>
+    <string name="write_rfid">写入NFC ID</string>
+    <string name="change_sleep_mode">转换为睡眠模式</string>
+    <string name="change_work_mode">转换为工作模式</string>
+    <string name="check_and_write_rfid">工厂烧录RFID</string>
+    <string name="check">检查</string>
+    <string name="scan_code_and_rfid_same">条形码与RFID一致</string>
+    <string name="scan_code_and_rfid_unsame">条形码与RFID不一致</string>
+    <string name="barcode">条形码</string>
+    <string name="rfid">RFID</string>
+
+    <!-- 新增字段-->
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value"/>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+
+</resources>
