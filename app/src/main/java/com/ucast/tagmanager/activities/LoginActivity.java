@@ -69,10 +69,10 @@ public class LoginActivity extends AppCompatActivity {
         save = SavePasswd.getInstace();
         String info = save.get(MyTools.TOKEN);
 
-        if (!info.equals("")){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
+//        if (!info.equals("")){
+//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//            finish();
+//        }
 
         String login_id=save.get(MyTools.LOGIN_ID);
         String password=save.get(MyTools.PASSWORD);
@@ -88,13 +88,13 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView = passwordInput.getEditText();
 
 
-        if (!login_id.equals("")){
-            mUserName.setText(login_id);
-        }
-
-        if (!password.equals("")){
-            mPasswordView.setText(password);
-        }
+//        if (!login_id.equals("")){
+//            mUserName.setText(login_id);
+//        }
+//
+//        if (!password.equals("")){
+//            mPasswordView.setText(password);
+//        }
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() < 6) {
+                if (s.length() < 5) {
                     userNameInput.setError(getResources().getString(R.string.username_morethan_six));
                     userNameInput.setErrorEnabled(true);
                 } else {
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() < 6) {
+                if (s.length() < 5) {
                     passwordInput.setError(getResources().getString(R.string.password_morethan_six));
                     passwordInput.setErrorEnabled(true);
                 } else {
@@ -160,12 +160,12 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void attemptLogin() {
         showProgress(true);
-        String login_id = mUserName.getText().toString().trim();
-        String password = mPasswordView.getText().toString().trim();
+        final String login_id = mUserName.getText().toString().trim();
+        final String password = mPasswordView.getText().toString().trim();
 
         RequestParams requestParams = new RequestParams(HttpRequest.LOGIN_URL);
-        requestParams.addBodyParameter("login_id", login_id);
-        requestParams.addBodyParameter("password", password);
+        requestParams.addBodyParameter("Username", login_id);
+        requestParams.addBodyParameter("Password", password);
 
 //        requestParams.addHeader("Authorization","Basic " + info);
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
@@ -176,15 +176,15 @@ public class LoginActivity extends AppCompatActivity {
 //                        + "loginid:" + login.getServiceman().getLogin_id() +
 //                        "emp_name" + login.getServiceman().getEmp_name()
 //                );
-                if (login.getResult().equals("true")) {
+                if (login.getMsgType().equals("1")) {
                     //请求成功
                     save.save(MyTools.TOKEN, login.getInfo());
-                    save.save(MyTools.LOGIN_ID, login.getServiceman().getLogin_id());
-                    save.save(MyTools.PASSWORD, login.getServiceman().getPassword());
+                    save.save(MyTools.LOGIN_ID, login_id);
+                    save.save(MyTools.PASSWORD, password);
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    showDialog(login.getMsg());
+                    showDialog(login.getInfo());
                 }
 
             }

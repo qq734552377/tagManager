@@ -39,6 +39,7 @@
             style="@style/FullScrennButton"
             android:layout_marginTop="16dp"
             android:text="@string/change_sleep_mode"
+            android:visibility="gone"
             android:textStyle="bold"/>
 
         <android.support.v7.widget.AppCompatButton
@@ -53,7 +54,7 @@
             style="@style/FullScrennButton"
             android:layout_marginTop="16dp"
             android:text="@string/check"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textStyle="bold"/>
 
 
@@ -98,5 +99,6 @@
 
 
     </LinearLayout>
+
 
 </android.support.constraint.ConstraintLayout>

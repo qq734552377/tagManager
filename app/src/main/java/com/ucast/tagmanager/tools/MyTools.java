@@ -1,6 +1,8 @@
 package com.ucast.tagmanager.tools;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -10,6 +12,8 @@ import com.ucast.tagmanager.entity.Config;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by pj on 2019/1/28.
@@ -29,7 +33,48 @@ public class MyTools {
     public static final String OVERTIME_ID ="overtime_id";
 
 
+    public static Date stringToDate(String s) {
+        Date time = null;
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            time = sd.parse(s);
+        } catch (java.text.ParseException e) {
+            System.out.println("输入的日期格式有误！");
+            e.printStackTrace();
+        }
+        return time;
+    }
 
+
+    public static long getIntToMillis(String str) {
+        String str_date = str + " " + "00:00:00";
+        Date date = stringToDate(str_date);
+        return date.getTime();
+    }
+
+    public static String millisToDateString(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date;
+        Date curDate = new Date(time);
+        date = formatter.format(curDate);
+        return date;
+    }
+
+
+    public static String millisToDateStringNoSpace(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+        String date;
+        Date curDate = new Date(time);
+        date = formatter.format(curDate);
+        return date;
+    }
+    public static String millisToDateStringOnlyYMD(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String date;
+        Date curDate = new Date(time);
+        date = formatter.format(curDate);
+        return date;
+    }
 
 
     public static void writeToFile(String path , String data){
@@ -87,6 +132,11 @@ public class MyTools {
         writeToFile(Config.LOGPATH,log);
     }
 
+
+    public static void writeSimpleLogWithTime(String log){
+        if (Config.ISDEBUG)
+            writeToFile(Config.LOGPATHWITHTIME,millisToDateStringNoSpace(System.currentTimeMillis()) + "  : " +log);
+    }
     /**
      *  将指定byte数组以16进制的形式返回
      * */
@@ -124,4 +174,17 @@ public class MyTools {
         dest[dest.length - 1] = jiaoYan;
         return dest;
     }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degress) {
+
+        if (bitmap != null){
+            Matrix m = new Matrix();
+            m.postRotate(degress);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            return bitmap;
+        }
+         return bitmap;
+
+    }
+
 }

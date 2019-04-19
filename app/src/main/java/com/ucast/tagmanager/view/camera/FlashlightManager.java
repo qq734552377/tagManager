@@ -94,7 +94,7 @@ final class FlashlightManager {
     try {
       return Class.forName(name);
     } catch (ClassNotFoundException cnfe) {
-      // OK
+      // ok
       return null;
     } catch (RuntimeException re) {
       Log.w(TAG, "Unexpected error while finding class " + name, re);
@@ -106,7 +106,7 @@ final class FlashlightManager {
     try {
       return clazz.getMethod(name, argClasses);
     } catch (NoSuchMethodException nsme) {
-      // OK
+      // ok
       return null;
     } catch (RuntimeException re) {
       Log.w(TAG, "Unexpected error while finding method " + name, re);

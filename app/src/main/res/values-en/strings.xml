@@ -218,4 +218,26 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
 
+    <string name="input_tuoche">请输入拖板车的ID编号后拍照：</string>
+    <string name="no_tuoche_id">请输入拖板车的ID编号，谢谢！</string>
+    <string name="nfc_to_work">正在将Tag转换为工作模式，请将手机贴近NFC卡片</string>
+    <string name="nfc_to_sleep">正在将Tag转换为睡眠模式，请将手机贴近NFC卡片</string>
+    <string name="workmode_now">已经是工作模式了</string>
+    <string name="sleepmode_now">已经是睡眠模式了</string>
+    <string name="change_workmode_success">转换为工作模式了</string>
+    <string name="change_sleepmode_success">转换为睡眠模式了</string>
+    <string name="scan_code_pos_wrong">条形码的扫描姿势有可能不正确</string>
+    <string name="rfid_not_match_scancode">设备的RFID与条形码的信息不匹配 请重新检查</string>
+    <string name="rfid_">RFID :</string>
+    <string name="device_ok">设备正常</string>
+    <string name="scancode_empty">扫描结果为空  请重新操作</string>
+    <string name="read_rfid_error">读取RFID 有点问题</string>
+    <string name="please_active_rfid_by_rule">请按照规定的流程激活tag，感谢你的配合！</string>
+    <string name="no_photo_msg">没有拍照数据，请按照规定流程激活Tag，感谢你的配合！</string>
+    <string name="no_tuoche_msg">没有拖板车的ID，请按照规定流程激活Tag，感谢你的配合！</string>
+    <string name="not_surport_nfc">设备不支持NFC！</string>
+    <string name="please_open_nfc">请在系统设置中先启用NFC功能！</string>
+    <string name="scancode_length_wrong">扫描结果长度不对,请重试！</string>
+    <string name="upload_data_">正在上传数据，请等待...</string>
+    <string name="token_error">Token_Error</string>
 </resources>

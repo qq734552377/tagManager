@@ -2,38 +2,40 @@ package com.ucast.tagmanager;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
-import android.hardware.usb.UsbRequest;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
-import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcA;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ucast.tagmanager.entity.NFCReaderProtocol;
+import com.ucast.tagmanager.activities.LoginActivity;
+import com.ucast.tagmanager.activities.MyCameraActivity;
+import com.ucast.tagmanager.entity.OperateStatus;
+import com.ucast.tagmanager.eventBusMsg.AllThingOk;
 import com.ucast.tagmanager.eventBusMsg.ChangeSleepModeResult;
 import com.ucast.tagmanager.eventBusMsg.ChangeWorkingModeResult;
+import com.ucast.tagmanager.eventBusMsg.GetServiceCanActiveMsg;
 import com.ucast.tagmanager.eventBusMsg.NFCServiceStatusMsg;
 import com.ucast.tagmanager.eventBusMsg.ReadModeRusult;
 import com.ucast.tagmanager.eventBusMsg.ReadNFCRFIDMsg;
+import com.ucast.tagmanager.eventBusMsg.TakePhotoPath;
 import com.ucast.tagmanager.eventBusMsg.WriteNFCResult;
-import com.ucast.tagmanager.serial.OpenPrint;
+import com.ucast.tagmanager.myview.MyInputDialog;
+import com.ucast.tagmanager.tools.HttpRequest;
 import com.ucast.tagmanager.tools.MyDialog;
-import com.ucast.tagmanager.tools.MyTools;
 import com.ucast.tagmanager.view.mysaomiao.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,19 +47,23 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public String scanResult = "";
+    public String tuoBancheId = "";
     public ProgressDialog progressDialog = null;
+    private MyInputDialog inputTuobancheIdDialog = null;
     public int readRfidToHandleType = 0;
     public int readModeToHandleType = 0;
+    private boolean isUploading = false;
+
+    private OperateStatus status;
+
+    public static final int CAMERA = 777;
+    private String  imagePath = "";
 
     public byte[] SEND_WILL_CHANGE_RFID = {
             (byte) 0xA2,//写
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NfcAdapter nfcAdapter;
     private PendingIntent mPendingIntent;
+
 
     @ViewInject(R.id.scan_code)
     TextView barCodeTextview;
@@ -168,12 +175,16 @@ public class MainActivity extends AppCompatActivity {
     @Event(R.id.change_to_sleep)
     private void change_to_sleep(View v){
         initTextViewMsg();
+        readRfidToHandleType = R.id.read_rfid_to_change_mode;
         readModeToHandleType = R.id.change_mode_to_sleep;
-        checkRfidToChangeMode();
+//        checkRfidToChangeMode();
+        setProgressDialogMsgAndShow(getString(R.string.nfc_to_sleep));
+
     }
     @Event(R.id.change_to_work)
     private void change_to_work(View v){
         initTextViewMsg();
+        initPathAndTuocheID();
         readModeToHandleType = R.id.change_mode_to_work;
         checkRfidToChangeMode();
     }
@@ -194,14 +205,21 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null)
             return;
-        boolean isOK;
+
         switch (resultCode) {
             case 0://侧面摄像头
                 scanResult = data.getStringExtra(CaptureActivity.RESULT);
-                //todo 判断扫描结果长度  长度正确读取RFID
-
+//                scanResult = "03343107";
+                //todo 判断扫描结果长度  打开系统相机
                 barCodeTextview.setText(getString(R.string.barcode) + ":" + scanResult);
-                setProgressDialogMsgAndShow("请将手机贴近NFC卡片，听到声音后等待一秒");
+                if (scanResult.length() == 8){
+//                    startCamera();
+                    if (readModeToHandleType == R.id.change_mode_to_work)
+                        showTuobancheDialog();
+                }else{
+                    MyDialog.showToast(MainActivity.this,getString(R.string.scancode_length_wrong));
+                    msgResultTextview.setText(getString(R.string.scancode_length_wrong));
+                }
                 break;
             case 1://前面摄像头
                 scanResult = data.getStringExtra(CaptureActivity.RESULT);
@@ -209,6 +227,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    public void startCamera(){
+        try {
+            Intent intent = new Intent(this, MyCameraActivity.class);
+            startActivity(intent);
+        }catch (Exception e){
+
+        }
     }
 
     public void checkRfid(){
@@ -222,10 +249,51 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
+    public void takePhotoPath(TakePhotoPath takePhotoPath){
+        imagePath = takePhotoPath.getPath();
+        setProgressDialogMsgAndShow(getString(R.string.nfc_to_work));
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
+    public void getServiceCanActive(GetServiceCanActiveMsg msg){
+        isUploading = false;
+        if (msg.isCanActived()){
+            status = OperateStatus.GETCANACTIVED;
+        }else{
+            if (msg.getInfo().equals(getString(R.string.token_error))){
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                return;
+            }
+            msgResultTextview.setText(msg.getInfo());
+            initPathAndTuocheID();
+            dismssProgress();
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
+    public void allThingsOk(AllThingOk msg){
+        isUploading = false;
+        if (msg.isStatus()) {
+            dismssProgress();
+            initPathAndTuocheID();
+        }else{
+            if (msg.getInfo().equals(getString(R.string.token_error))){
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                return;
+            }
+            dismssProgress();
+            msgResultTextview.setText(msg.getInfo());
+            initPathAndTuocheID();
+        }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
     public void readRfidResultHandle(ReadNFCRFIDMsg readNFCMsg){
         // TODO 读取rfid 检测RFID与扫描得到的条形码比对 不相同直接返回
         msgResultTextview.setText(readNFCMsg.getMsg());
-        dismssProgress();
+//        dismssProgress();
         switch (readRfidToHandleType){
             case R.id.read_rfid_to_check:
                 //TODO 回馈结果给操作者
@@ -281,13 +349,34 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//更改为work完成后操作
     public void changeWorkResultHandle(ChangeWorkingModeResult changeWorkingModeResult){
         //TODO 提示已经转换为work并上报服务器
-
+        HttpRequest.sendDeviceModeStatus(scanResult,OperateStatus.ACTIVATESTR);
     }
 
 
 
     public void showToast(String str){
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showTuobancheDialog(){
+        if (inputTuobancheIdDialog == null) {
+            inputTuobancheIdDialog = MyDialog.createMyInputDialog(this);
+            inputTuobancheIdDialog.setOnNextClicked(new MyInputDialog.OnNextClicked() {
+                @Override
+                public void onNextClickedListener(EditText input) {
+                    String str = input.getText().toString().trim();
+                    if (str.isEmpty()){
+                        showToast(getString(R.string.no_tuoche_id));
+                    }else {
+                        tuoBancheId = str;
+                        input.setText("");
+                        startCamera();
+                        inputTuobancheIdDialog.dismiss();
+                    }
+                }
+            });
+        }
+        inputTuobancheIdDialog.show();
     }
 
     public ProgressDialog setProgressDialogMsg(String msg){
@@ -309,6 +398,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public boolean isProgressShow(){
+        if (progressDialog == null)
+            return false;
+        return progressDialog.isShowing();
+    }
+
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -320,11 +415,11 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (nfcAdapter == null) {
-            msgResultTextview.setText("设备不支持NFC！");
+            msgResultTextview.setText(getString(R.string.not_surport_nfc));
             return;
         }
         if (!nfcAdapter.isEnabled()) {
-            msgResultTextview.setText("请在系统设置中先启用NFC功能！");
+            msgResultTextview.setText(getString(R.string.please_open_nfc));
             return;
         }
 
@@ -353,7 +448,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
     protected void resolveIntent(Intent intent) {
-
+        if (!isProgressShow()) {
+            showToast(getString(R.string.please_active_rfid_by_rule));
+            return;
+        }
+        if (isUploading){
+            msgResultTextview.setText(getString(R.string.upload_data_));
+            return;
+        }
         // 得到是否检测到TAG触发
         if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())
                 || NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())
@@ -398,61 +500,119 @@ public class MainActivity extends AppCompatActivity {
             };
             byte[] result = nfcA.transceive(READ);
             if (result.length < 3){
-                matchResultTextview.setText("读取RFID 有点问题");
+                matchResultTextview.setText(getString(R.string.read_rfid_error));
                 return;
             }
             int _rfid = result[0] + (result[1] << 8) + (result[2] << 16);
-            rfidTextview.setText("RFID : " + _rfid);
+            barCodeTextview.setText(getString(R.string.barcode) + ":" + scanResult);
+            rfidTextview.setText(getString(R.string.rfid_) + String.format("%08d",_rfid));
             switch (readRfidToHandleType){
                 case R.id.read_rfid_to_check:
                     if (result.length < 3) {
-                        matchResultTextview.setText("读取RFID 有点问题");
+                        matchResultTextview.setText(getString(R.string.read_rfid_error));
+                        dismssProgress();
                         return;
                     }
-                    int rfid = result[0] + ( result[1] << 8 ) + ( result[2] << 16);
                     if (scanResult.isEmpty()){
                         //与扫描的结果作比较 给出提示信息
-                        matchResultTextview.setText("扫描结果为空  请重新点击检查RFID按钮");
+                        matchResultTextview.setText(getString(R.string.scancode_empty));
+                        dismssProgress();
                         return;
                     }
                     try {
                         int scanRInt = Integer.parseInt(scanResult);
-                        if (rfid == scanRInt){
-                            matchResultTextview.setText("设备正常");
-                            rfidTextview.setText("RFID : " + scanResult);
+                        if (_rfid == scanRInt){
+                            matchResultTextview.setText(getString(R.string.device_ok));
+                            rfidTextview.setText(getString(R.string.rfid_) + scanResult);
                         } else {
-                            matchResultTextview.setText("设备的RFID与条形码的信息不匹配 请重新检查");
+                            matchResultTextview.setText(getString(R.string.rfid_not_match_scancode));
+                            dismssProgress();
                         }
                     }catch (Exception e){
-                        matchResultTextview.setText("条形码的扫描不正确");
+                        matchResultTextview.setText(getString(R.string.scan_code_pos_wrong));
+                        dismssProgress();
+                        return;
                     }
 
 
                     break;
                 case R.id.read_rfid_to_change_mode:
+
+
                     if (readModeToHandleType == R.id.change_mode_to_sleep){//变为睡眠模式
                         if ((result[4] & 0x01) == 0){//已经是睡眠模式了
-                            msgResultTextview.setText("已经是睡眠模式了");
+                            msgResultTextview.setText(getString(R.string.sleepmode_now));
                             EventBus.getDefault().postSticky(new ChangeSleepModeResult());
+                            dismssProgress();
                         }else {//不是睡眠模式  改为睡眠模式
                             byte[] change_mode_result = nfcA.transceive(SEND_CHANGE_TO_SLEEP);
-                            msgResultTextview.setText("已经转换为睡眠模式了");
+                            msgResultTextview.setText(getString(R.string.change_sleepmode_success));
                             EventBus.getDefault().postSticky(new ChangeSleepModeResult());
+                            dismssProgress();
                         }
                     }else if(readModeToHandleType == R.id.change_mode_to_work){//变为工作模式
-                        if ((result[4] & 0x01) == 1){//已经是工作模式了
-                            msgResultTextview.setText("已经是工作模式了");
-                            EventBus.getDefault().postSticky(new ChangeWorkingModeResult());
+                        if (imagePath.isEmpty()){
+                            msgResultTextview.setText(getString(R.string.no_photo_msg));
+                            dismssProgress();
+                            return;
+                        }
+                        if (tuoBancheId.isEmpty()){
+                            msgResultTextview.setText(getString(R.string.no_tuoche_msg));
+                            dismssProgress();
+                            return;
+                        }
+                        if (scanResult.isEmpty()){
+                            //与扫描的结果作比较 给出提示信息
+                            matchResultTextview.setText(getString(R.string.scancode_empty));
+                            dismssProgress();
+                            return;
+                        }
+                        try {
+                            int scanRInt = Integer.parseInt(scanResult);
+                            if (_rfid == scanRInt){
+                                matchResultTextview.setText(getString(R.string.device_ok));
+                                rfidTextview.setText(getString(R.string.rfid_) + scanResult);
+                            } else {
+                                matchResultTextview.setText(getString(R.string.rfid_not_match_scancode));
+                                dismssProgress();
+                                return;
+                            }
+                        }catch (Exception e){
+                            matchResultTextview.setText(getString(R.string.scan_code_pos_wrong));
+                            dismssProgress();
+                            return;
+                        }
+                        int deviceStatus = (result[4] & 0x01);
+                        if (deviceStatus == 1){
+                            status = OperateStatus.ACTIVED;
+                        }
+                        int fangchaiStatus = (result[4] >> 1) & 0x01;
+                        if (status.getLevel() < OperateStatus.GETCANACTIVED.getLevel()){
+                           if (status == OperateStatus.SLEEP){
+                                status = OperateStatus.IFACTIVED;
+                                isUploading = true;
+                                HttpRequest.sendWillChangeDeviceModeSatus(scanResult,tuoBancheId,OperateStatus.WAITACTIVATESTR,imagePath);
+                                return;
+                            }
+                        }
+                        if (deviceStatus == 1){//已经是工作模式了
+                            msgResultTextview.setText(getString(R.string.workmode_now));
+                            //设置防拆
+                            byte[] fangchai_result = nfcA.transceive(SEND_FANG_CHAI);
+                            dismssProgress();
+                            initPathAndTuocheID();
                         }else {//不是工作模式 改为工作模式
                             byte[] change_mode_result = nfcA.transceive(SEND_CHANGE_TO_WORK);
                             try {
-                                Thread.sleep(10);
+                                Thread.sleep(80);
                             }catch (Exception e){
 
                             }
+                            //设置防拆
                             byte[] fangchai_result = nfcA.transceive(SEND_FANG_CHAI);
-                            msgResultTextview.setText("已经转换为工作模式了");
-                            EventBus.getDefault().postSticky(new ChangeWorkingModeResult());
+                            msgResultTextview.setText(getString(R.string.change_workmode_success));
+                            EventBus.getDefault().postSticky(new ChangeWorkingModeResult(true));
+                            isUploading = true;
                         }
                     }
                     break;
@@ -477,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
             matchResultTextview.setText("");
             showToast(e.toString());
         }finally{
-            dismssProgress();
+//            dismssProgress();
             if (nfcA != null){
                 try {
                     nfcA.close();
@@ -521,9 +681,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTextViewInitialText(){
+        barCodeTextview.setText("");
         rfidTextview.setText("");
         matchResultTextview.setText("");
         msgResultTextview.setText("");
+    }
+
+    public void initPathAndTuocheID(){
+        status = OperateStatus.SLEEP;
+        imagePath = "";
+        tuoBancheId = "";
     }
 
 }

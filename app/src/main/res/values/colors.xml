@@ -40,4 +40,11 @@
     <color name="color_8">#cc9966</color>
     <color name="color_9">#ff99cc</color>
     <color name="color_10">#3eb6cf</color>
+
+
+    <color name="loginBtColor">#3eb6cf</color>
+    <color name="loginBtPressedColor">#3ee6af</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+
 </resources>
