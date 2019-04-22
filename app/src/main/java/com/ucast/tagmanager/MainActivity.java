@@ -212,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
 //                scanResult = "03343107";
                 //todo 判断扫描结果长度  打开系统相机
                 barCodeTextview.setText(getString(R.string.barcode) + ":" + scanResult);
+                if(readRfidToHandleType == R.id.read_rfid_to_check){
+                    setProgressDialogMsgAndShow(getString(R.string.nfc_to_check));
+                    return;
+                }
                 if (scanResult.length() == 8){
 //                    startCamera();
                     if (readModeToHandleType == R.id.change_mode_to_work)
@@ -239,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkRfid(){
+        initTextViewMsg();
+        initPathAndTuocheID();
         readRfidToHandleType = R.id.read_rfid_to_check;
         startAc(0);
     }
@@ -499,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
                     (byte) 0x04,//页数
             };
             byte[] result = nfcA.transceive(READ);
+            int deviceStatus = (result[4] & 0x01);
             if (result.length < 3){
                 matchResultTextview.setText(getString(R.string.read_rfid_error));
                 return;
@@ -524,6 +531,12 @@ public class MainActivity extends AppCompatActivity {
                         if (_rfid == scanRInt){
                             matchResultTextview.setText(getString(R.string.device_ok));
                             rfidTextview.setText(getString(R.string.rfid_) + scanResult);
+                            if (deviceStatus == 1){
+                                msgResultTextview.setText(getString(R.string.workmode_now_));
+                            }else{
+                                msgResultTextview.setText(getString(R.string.sleepmode_now_));
+                            }
+                            dismssProgress();
                         } else {
                             matchResultTextview.setText(getString(R.string.rfid_not_match_scancode));
                             dismssProgress();
@@ -582,7 +595,6 @@ public class MainActivity extends AppCompatActivity {
                             dismssProgress();
                             return;
                         }
-                        int deviceStatus = (result[4] & 0x01);
                         if (deviceStatus == 1){
                             status = OperateStatus.ACTIVED;
                         }

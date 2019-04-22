@@ -70,7 +70,7 @@ public class InfraredCameraInterface {
 //                parameters.setPictureFormat(ImageFormat.JPEG);
                 //设置图片预览的格式
 //                parameters.setPreviewFormat(PixelFormat.RGBA_8888);
-//                setZoom(parameters);
+                setZoom(parameters);
                 List<Camera.Size> list = parameters.getSupportedPictureSizes();
                 int paramPosition = 0;
                 final Camera.Size size = list.get(paramPosition);
@@ -139,20 +139,6 @@ public class InfraredCameraInterface {
         if (camera != null) {
             if (!isPreview)
                 return;
-//            MyTools.writeSimpleLogWithTime("准备相机  " + System.currentTimeMillis());
-            Camera.Parameters parameters;
-            try{
-                parameters = camera.getParameters();
-            }catch(Exception e){
-                e.printStackTrace();
-                return;
-            }
-//            parameters.setPictureSize(800,640);
-
-//            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            //设置照相机参数
-//            camera.setParameters(parameters);
-//            MyTools.writeSimpleLogWithTime("设置参数完成  " + System.currentTimeMillis());
             camera.autoFocus(new Camera.AutoFocusCallback() {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {

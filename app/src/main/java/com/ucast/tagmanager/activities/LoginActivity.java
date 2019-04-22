@@ -181,7 +181,9 @@ public class LoginActivity extends AppCompatActivity {
                     save.save(MyTools.TOKEN, login.getInfo());
                     save.save(MyTools.LOGIN_ID, login_id);
                     save.save(MyTools.PASSWORD, password);
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
                     finish();
                 } else {
                     showDialog(login.getInfo());

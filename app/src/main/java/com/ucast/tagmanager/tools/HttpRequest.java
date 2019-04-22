@@ -18,8 +18,9 @@ import java.io.File;
  * Created by pj on 2019/1/29.
  */
 public class HttpRequest {
-//    public static String HOST = "";
-    public static String HOST = "http://192.168.0.113:12907";
+    public static String HOST = "http://180.240.240.117:12347";
+//    public static String HOST = "http://192.168.0.31:12347";
+//    public static String HOST = "http://58.246.122.118:12347";
     public static String LOGIN_URL = HOST + "/Internal/Login";
     public static String SEND_READY_TO_WRITE_ID_URL = HOST + "/";
     public static String GET_DEVICE_STATUS = HOST + "/Tag/GetStatus";
