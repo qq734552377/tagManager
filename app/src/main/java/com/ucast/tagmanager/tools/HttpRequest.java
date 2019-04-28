@@ -69,7 +69,7 @@ public class HttpRequest {
             public void onSuccess(String result) {
                 LoginMSg login = JSON.parseObject(result, LoginMSg.class);
                 if (login.getMsgType().equals("1")){
-                    EventBus.getDefault().postSticky(new GetServiceCanActiveMsg(true,""));
+                    EventBus.getDefault().postSticky(new GetServiceCanActiveMsg(true,ExceptionApplication.getInstance().getString(R.string.active_get_server_command)));
                 }else {
                     if (login.getMsgType().equals("3")){
                         EventBus.getDefault().postSticky(new GetServiceCanActiveMsg(false, ExceptionApplication.getInstance().getString(R.string.token_error)));
@@ -81,7 +81,7 @@ public class HttpRequest {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                EventBus.getDefault().postSticky(new GetServiceCanActiveMsg(false,"请求超时，请重新操作" + ex.getMessage()));
+                EventBus.getDefault().postSticky(new GetServiceCanActiveMsg(false,"请求超时，请重新操作"));
             }
 
             @Override
@@ -96,7 +96,7 @@ public class HttpRequest {
 
     }
 
-    public static void sendDeviceModeStatus(String barCode,String status){
+    public static void sendDeviceModeStatus(final String barCode, String status){
         RequestParams requestParams = new RequestParams(HttpRequest.SEND_CHANGE_DEVICE_MODE_URL);
         requestParams.addBodyParameter("ID",barCode);
         requestParams.addBodyParameter("Status",status);
@@ -107,19 +107,19 @@ public class HttpRequest {
             public void onSuccess(String result) {
                 LoginMSg login = JSON.parseObject(result, LoginMSg.class);
                 if (login.getMsgType().equals("1")){
-                    EventBus.getDefault().postSticky(new AllThingOk(true,""));
+                    EventBus.getDefault().postSticky(new AllThingOk(true,ExceptionApplication.getInstance().getString(R.string.active_all_ok),barCode));
                 }else {
                     if (login.getMsgType().equals("3")){
-                        EventBus.getDefault().postSticky(new AllThingOk(false, ExceptionApplication.getInstance().getString(R.string.token_error)));
+                        EventBus.getDefault().postSticky(new AllThingOk(false, ExceptionApplication.getInstance().getString(R.string.token_error),barCode));
                         return;
                     }
-                    EventBus.getDefault().postSticky(new AllThingOk(false,login.getInfo()));
+                    EventBus.getDefault().postSticky(new AllThingOk(false,login.getInfo(),barCode));
                 }
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                EventBus.getDefault().postSticky(new AllThingOk(false,"请求超时  " + ex.getMessage()));
+                EventBus.getDefault().postSticky(new AllThingOk(false,ExceptionApplication.getInstance().getString(R.string.timeout),barCode));
             }
 
             @Override

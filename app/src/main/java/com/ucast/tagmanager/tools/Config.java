@@ -11,5 +11,6 @@ public class Config {
     public static boolean USESTRINGPATH =true;
 
     public static String LOGPATH = CrashHandler.ALBUM_PATH + "/simpleLog.txt";
+    public static String ACTIVEOKCSVPATH = CrashHandler.ALBUM_PATH + "/activeOk.csv";
     public static String CAMERA = CrashHandler.ALBUM_PATH + "/camera/";
 }

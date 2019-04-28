@@ -5,9 +5,10 @@ package com.ucast.tagmanager.eventBusMsg;
  */
 public class ChangeWorkingModeResult {
     boolean isOK = false;
-
-    public ChangeWorkingModeResult(boolean isOK) {
+    String rfid;
+    public ChangeWorkingModeResult(boolean isOK,String rfid) {
         this.isOK = isOK;
+        this.rfid = rfid;
     }
 
     public boolean isOK() {
@@ -16,5 +17,13 @@ public class ChangeWorkingModeResult {
 
     public void setOK(boolean OK) {
         isOK = OK;
+    }
+
+    public String getRfid() {
+        return rfid;
+    }
+
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
 }

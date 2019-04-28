@@ -6,10 +6,12 @@ package com.ucast.tagmanager.eventBusMsg;
 public class AllThingOk {
     String info;
     boolean status;
+    String barCode;
 
-    public AllThingOk(boolean status,String info ) {
+    public AllThingOk(boolean status,String info,String barCode ) {
         this.info = info;
         this.status = status;
+        this.barCode = barCode;
     }
 
     public String getInfo() {
@@ -26,5 +28,13 @@ public class AllThingOk {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 }

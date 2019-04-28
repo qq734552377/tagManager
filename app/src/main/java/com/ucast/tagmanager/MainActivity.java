@@ -2,6 +2,7 @@ package com.ucast.tagmanager;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -25,6 +26,7 @@ import com.ucast.tagmanager.activities.LoginActivity;
 import com.ucast.tagmanager.activities.MyCameraActivity;
 import com.ucast.tagmanager.entity.OperateStatus;
 import com.ucast.tagmanager.eventBusMsg.AllThingOk;
+import com.ucast.tagmanager.eventBusMsg.CanReadDianYaEvent;
 import com.ucast.tagmanager.eventBusMsg.ChangeSleepModeResult;
 import com.ucast.tagmanager.eventBusMsg.ChangeWorkingModeResult;
 import com.ucast.tagmanager.eventBusMsg.GetServiceCanActiveMsg;
@@ -33,9 +35,12 @@ import com.ucast.tagmanager.eventBusMsg.ReadModeRusult;
 import com.ucast.tagmanager.eventBusMsg.ReadNFCRFIDMsg;
 import com.ucast.tagmanager.eventBusMsg.TakePhotoPath;
 import com.ucast.tagmanager.eventBusMsg.WriteNFCResult;
+import com.ucast.tagmanager.exception.ExceptionApplication;
 import com.ucast.tagmanager.myview.MyInputDialog;
 import com.ucast.tagmanager.tools.HttpRequest;
 import com.ucast.tagmanager.tools.MyDialog;
+import com.ucast.tagmanager.tools.MyTools;
+import com.ucast.tagmanager.tools.SavePasswd;
 import com.ucast.tagmanager.view.mysaomiao.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
     public int readRfidToHandleType = 0;
     public int readModeToHandleType = 0;
     private boolean isUploading = false;
+    private boolean isCanReadDianYa = false;
+    private int readDianYaTimes = 0;
+    private int readDianYaMaxNumber = 5;
+    private float MINDIANYA = 3.4f;
+    private float MAXDIANYA = 3.85f;
 
     private OperateStatus status;
 
@@ -99,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
             (byte) 0x00
     };
     byte[] SEND_FANG_CHAI = {
+            (byte) 0xA2,//写
+            (byte) 0x07,//页数
+            (byte) 0x41,//A
+            (byte) 0x62,//b
+            (byte) 0x43,//C
+            (byte) 0x64 //d
+    };
+    byte[] SEND_DIAN_YA_FIRST = {
+            (byte) 0xA2,//写
+            (byte) 0x06,//页数
+            (byte) 0x61,//a
+            (byte) 0x62,//b
+            (byte) 0x63,//c
+            (byte) 0x64 //d
+    };
+    byte[] SEND_DIAN_YA_SECOND = {
             (byte) 0xA2,//写
             (byte) 0x07,//页数
             (byte) 0x41,//A
@@ -177,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         initTextViewMsg();
         readRfidToHandleType = R.id.read_rfid_to_change_mode;
         readModeToHandleType = R.id.change_mode_to_sleep;
+        readDianYaTimes = 0;
 //        checkRfidToChangeMode();
         setProgressDialogMsgAndShow(getString(R.string.nfc_to_sleep));
 
@@ -186,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         initTextViewMsg();
         initPathAndTuocheID();
         readModeToHandleType = R.id.change_mode_to_work;
+        dismssProgress();
         checkRfidToChangeMode();
     }
     @Event(R.id.check_rfid)
@@ -245,11 +273,14 @@ public class MainActivity extends AppCompatActivity {
     public void checkRfid(){
         initTextViewMsg();
         initPathAndTuocheID();
+        dismssProgress();
         readRfidToHandleType = R.id.read_rfid_to_check;
+        readDianYaTimes = 0;
         startAc(0);
     }
     public void checkRfidToChangeMode(){
         readRfidToHandleType = R.id.read_rfid_to_change_mode;
+        readDianYaTimes = 0;
         startAc(0);
     }
 
@@ -270,29 +301,54 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return;
             }
-            msgResultTextview.setText(msg.getInfo());
             initPathAndTuocheID();
             dismssProgress();
         }
+        msgResultTextview.setText(msg.getInfo());
     }
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
-    public void allThingsOk(AllThingOk msg){
+    public void allThingsOk(final AllThingOk msg){
         isUploading = false;
+        dismssProgress();
         if (msg.isStatus()) {
-            dismssProgress();
             initPathAndTuocheID();
+            msgResultTextview.setText(msg.getInfo());
         }else{
             if (msg.getInfo().equals(getString(R.string.token_error))){
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 return;
             }
-            dismssProgress();
+            if (msg.getInfo().equals(getString(R.string.timeout))){
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(ExceptionApplication.getInstance().getString(R.string.tishi));
+                builder.setMessage(ExceptionApplication.getInstance().getString(R.string.tishi_timeout));
+                builder.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        changeWorkResultHandle(new ChangeWorkingModeResult(true,msg.getBarCode()));
+                    }
+                });
+                builder.setNegativeButton("忽略", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MyTools.writeToActiveCsv(msg.getBarCode() + "," + OperateStatus.ACTIVATESTR);
+                        msgResultTextview.setText(getString(R.string.tishi_hulve));
+                    }
+                });
+                builder.show();
+            }
             msgResultTextview.setText(msg.getInfo());
             initPathAndTuocheID();
         }
 
 
+    }
+
+    public void isCanReadDianYa(CanReadDianYaEvent event){
+        if (event.isCanReadDianYa()){
+            isCanReadDianYa = true;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//读取到RFID后的操作
@@ -354,8 +410,10 @@ public class MainActivity extends AppCompatActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)//更改为work完成后操作
     public void changeWorkResultHandle(ChangeWorkingModeResult changeWorkingModeResult){
-        //TODO 提示已经转换为work并上报服务器
-        HttpRequest.sendDeviceModeStatus(scanResult,OperateStatus.ACTIVATESTR);
+        // 提示已经转换为work并上报服务器
+        if(changeWorkingModeResult.getRfid().isEmpty())
+            return;
+        HttpRequest.sendDeviceModeStatus(changeWorkingModeResult.getRfid(),OperateStatus.ACTIVATESTR);
     }
 
 
@@ -499,6 +557,13 @@ public class MainActivity extends AppCompatActivity {
             str+="tag SAK:"+nfcA.getSak()+"\n";//获取卡的sak
             str+="max len:"+nfcA.getMaxTransceiveLength()+"\n";//获取卡片能接收的最大指令长度
 
+            nfcA.transceive(SEND_DIAN_YA_FIRST);
+
+            try {
+                Thread.sleep(80);
+            }catch (Exception e){
+
+            }
 
             byte[] READ = {
                     (byte) 0x30,//读
@@ -506,11 +571,33 @@ public class MainActivity extends AppCompatActivity {
             };
             byte[] result = nfcA.transceive(READ);
             int deviceStatus = (result[4] & 0x01);
-            if (result.length < 3){
-                matchResultTextview.setText(getString(R.string.read_rfid_error));
+            int dianya = (result[8] & 0xff) + ((result[9] & 0xff)<<8);
+            float dianyaF = (float)dianya * 3.6f * 7f /4096f;
+            if (dianyaF <= 0){
+                if (readDianYaTimes <= readDianYaMaxNumber) {
+                    msgResultTextview.setText(getString(R.string.dianya_show) + dianyaF);
+                    readDianYaTimes++;
+                    return;
+                }
+            }
+            readDianYaTimes = 0;
+            if (dianyaF <= MINDIANYA){
+                msgResultTextview.setText(getString(R.string.dianya_low)+ getString(R.string.dianya_show) + dianyaF);
+                dismssProgress();
                 return;
             }
-            int _rfid = result[0] + (result[1] << 8) + (result[2] << 16);
+            if (dianyaF > MAXDIANYA){
+                msgResultTextview.setText(getString(R.string.dianya_high)+ getString(R.string.dianya_show) + dianyaF);
+                dismssProgress();
+                return;
+            }
+
+            if (result.length < 3){
+                matchResultTextview.setText(getString(R.string.read_rfid_error));
+                dismssProgress();
+                return;
+            }
+            int _rfid = result[0] & 0xff  + (result[1] & 0xff << 8) + (result[2] & 0xff << 16);
             barCodeTextview.setText(getString(R.string.barcode) + ":" + scanResult);
             rfidTextview.setText(getString(R.string.rfid_) + String.format("%08d",_rfid));
             switch (readRfidToHandleType){
@@ -532,9 +619,9 @@ public class MainActivity extends AppCompatActivity {
                             matchResultTextview.setText(getString(R.string.device_ok));
                             rfidTextview.setText(getString(R.string.rfid_) + scanResult);
                             if (deviceStatus == 1){
-                                msgResultTextview.setText(getString(R.string.workmode_now_));
+                                msgResultTextview.setText(getString(R.string.workmode_now_) + " \n" + getString(R.string.dianya_show) + dianyaF);
                             }else{
-                                msgResultTextview.setText(getString(R.string.sleepmode_now_));
+                                msgResultTextview.setText(getString(R.string.sleepmode_now_) + " \n" + getString(R.string.dianya_show) + dianyaF);
                             }
                             dismssProgress();
                         } else {
@@ -623,8 +710,9 @@ public class MainActivity extends AppCompatActivity {
                             //设置防拆
                             byte[] fangchai_result = nfcA.transceive(SEND_FANG_CHAI);
                             msgResultTextview.setText(getString(R.string.change_workmode_success));
-                            EventBus.getDefault().postSticky(new ChangeWorkingModeResult(true));
+                            MyTools.writeSimpleLogWithTime(SavePasswd.getInstace().get(MyTools.LOGIN_ID) + "操作，  " + scanResult + "  激活成功");
                             isUploading = true;
+                            changeWorkResultHandle(new ChangeWorkingModeResult(true,String.format("%08d",_rfid)));
                         }
                     }
                     break;

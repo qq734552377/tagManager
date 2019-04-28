@@ -76,6 +76,9 @@ public class MyTools {
         return date;
     }
 
+    public static void writeToActiveCsv(String data){
+        writeToFile(com.ucast.tagmanager.tools.Config.ACTIVEOKCSVPATH,data);
+    }
 
     public static void writeToFile(String path , String data){
         try{

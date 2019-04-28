@@ -244,6 +244,14 @@
     <string name="scancode_length_wrong">扫描结果长度不对,请重试！</string>
     <string name="upload_data_">正在上传数据，请等待...</string>
     <string name="token_error">Token_Error</string>
+    <string name="timeout">timeout</string>
+    <string name="tishi_timeout">上传数据失败，请重试！</string>
+    <string name="tishi_hulve">设备已激活，但上传数据失败，请及时与管理员联系，谢谢！</string>
+    <string name="active_all_ok">设备已激活,操作成功！</string>
+    <string name="active_get_server_command">获取服务器指令成功！</string>
+    <string name="dianya_show">当前电压：</string>
+    <string name="dianya_low">Tag当前电压过低不能激活,请重试或联系管理员，</string>
+    <string name="dianya_high">Tag当前电压过高不能激活,请重试或联系管理员，</string>
 
 
 </resources>
