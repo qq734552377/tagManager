@@ -2,6 +2,7 @@ package com.ucast.tagmanager.tools;
 
 import com.alibaba.fastjson.JSON;
 import com.ucast.tagmanager.R;
+import com.ucast.tagmanager.entity.GetServerAffirm;
 import com.ucast.tagmanager.entity.LoginMSg;
 import com.ucast.tagmanager.eventBusMsg.AllThingOk;
 import com.ucast.tagmanager.eventBusMsg.GetServiceCanActiveMsg;
@@ -56,12 +57,15 @@ public class HttpRequest {
 
     }
 
-    public static void sendWillChangeDeviceModeSatus(String barCode,String tuobancheId,String status,String path){
+    public static void sendWillChangeDeviceModeSatus(GetServerAffirm affirm){
         RequestParams requestParams = new RequestParams(HttpRequest.SEND_WILL_CHANGE_DEVICE_MODE_URL);
-        requestParams.addBodyParameter("ID",barCode);
-        requestParams.addBodyParameter("Remarks",tuobancheId);
-        requestParams.addBodyParameter("Status",status);
-        requestParams.addBodyParameter("Picture",new File(path));
+        requestParams.addBodyParameter("ID",affirm.getBarcode());
+        requestParams.addBodyParameter("Remarks",affirm.getTuoBanId());
+        requestParams.addBodyParameter("Status",affirm.getStatus());
+        requestParams.addBodyParameter("Version",affirm.getVersion());
+        requestParams.addBodyParameter("Voltage_1",affirm.getVoltage_1());
+        requestParams.addBodyParameter("Voltage_2",affirm.getVoltage_2());
+        requestParams.addBodyParameter("Picture",new File(affirm.getImgPath()));
         requestParams.addHeader("Authorization","Basic " + savePasswd.get(MyTools.TOKEN));
         requestParams.setConnectTimeout(30 * 1000);
         x.http().post(requestParams, new Callback.CommonCallback<String>() {

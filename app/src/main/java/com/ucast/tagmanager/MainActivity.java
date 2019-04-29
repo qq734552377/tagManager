@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.ucast.tagmanager.activities.LoginActivity;
 import com.ucast.tagmanager.activities.MyCameraActivity;
+import com.ucast.tagmanager.entity.GetServerAffirm;
 import com.ucast.tagmanager.entity.OperateStatus;
 import com.ucast.tagmanager.eventBusMsg.AllThingOk;
 import com.ucast.tagmanager.eventBusMsg.CanReadDianYaEvent;
@@ -597,7 +598,9 @@ public class MainActivity extends AppCompatActivity {
                 dismssProgress();
                 return;
             }
-            int _rfid = result[0] & 0xff  + (result[1] & 0xff << 8) + (result[2] & 0xff << 16);
+            int _rfid = (result[0] & 0xff)  + ((result[1] & 0xff) << 8) + ((result[2] & 0xff) << 16);
+//            int _rfid = (result[0] & 0xff)  + ((result[1] << 8) & 0xff00) + ((result[2] << 16) & 0xff0000);
+            int version = result[3] & 0xff;
             barCodeTextview.setText(getString(R.string.barcode) + ":" + scanResult);
             rfidTextview.setText(getString(R.string.rfid_) + String.format("%08d",_rfid));
             switch (readRfidToHandleType){
@@ -690,7 +693,15 @@ public class MainActivity extends AppCompatActivity {
                            if (status == OperateStatus.SLEEP){
                                 status = OperateStatus.IFACTIVED;
                                 isUploading = true;
-                                HttpRequest.sendWillChangeDeviceModeSatus(scanResult,tuoBancheId,OperateStatus.WAITACTIVATESTR,imagePath);
+                                GetServerAffirm affirm = new GetServerAffirm();
+                                affirm.setBarcode(String.format("%08d",_rfid));
+                                affirm.setTuoBanId(tuoBancheId);
+                                affirm.setStatus(OperateStatus.WAITACTIVATESTR);
+                                affirm.setImgPath(imagePath);
+                                affirm.setVersion(String.format("%.1f",(float)version));
+                                affirm.setVoltage_1(String.format("%.2f",0.0f));
+                                affirm.setVoltage_2(String.format("%.2f",dianyaF));
+                                HttpRequest.sendWillChangeDeviceModeSatus(affirm);
                                 return;
                             }
                         }
